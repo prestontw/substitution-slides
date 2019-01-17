@@ -14,10 +14,13 @@ let handleClick = (_event, _self) => Js.log("clicked!");
    Which desugars to
 
    `ReasonReact.element(Page.make(~message="hello", [||]))` */
+   /* something with window.getselection.getrangeat(0), get children, (should be a textarea), then can get selection start and selection end from that */
+   /* might also see if codemirror makes this a lot easier. check out bs-generator */
+
 let make = (~message, _children) => {
   ...component,
   render: self =>
-    <div onClick=(self.handle(handleClick))>
-      (ReasonReact.string(message))
+    <div onClick={self.handle(handleClick)}>
+      <textarea value={message} readOnly=true />
     </div>,
 };

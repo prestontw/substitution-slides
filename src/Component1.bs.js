@@ -26,7 +26,10 @@ function make(message, _children) {
           /* render */(function (self) {
               return React.createElement("div", {
                           onClick: Curry._1(self[/* handle */0], handleClick)
-                        }, message);
+                        }, React.createElement("textarea", {
+                              readOnly: true,
+                              value: message
+                            }));
             }),
           /* initialState */component[/* initialState */10],
           /* retainedProps */component[/* retainedProps */11],
