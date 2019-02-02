@@ -1,33 +1,23 @@
 {
-  "name": "sub-slides",
+  "name": "substitution-slides",
   "version": "0.1.0",
-  "scripts": {
-    "build": "bsb -make-world",
-    "start": "bsb -make-world -w",
-    "clean": "bsb -clean-world",
-    "test": "jest --watch",
-    "webpack": "webpack -w",
-    "webpack:production": "NODE_ENV=production webpack",
-    "server": "webpack-dev-server"
-  },
-  "keywords": [
-    "BuckleScript"
-  ],
-  "author": "",
-  "license": "MIT",
+  "private": true,
   "dependencies": {
-    "codemirror": "^5.43.0",
-    "react": "^16.2.0",
-    "react-codemirror2": "^5.1.0",
-    "react-dom": "^16.2.0",
-    "reason-react": ">=0.4.0"
+    "react": "^16.7.0",
+    "react-dom": "^16.7.0",
+    "react-scripts-ts": "3.1.0"
+  },
+  "scripts": {
+    "start": "react-scripts-ts start",
+    "build": "react-scripts-ts build",
+    "test": "react-scripts-ts test --env=jsdom",
+    "eject": "react-scripts-ts eject"
   },
   "devDependencies": {
-    "@glennsl/bs-jest": "^0.4.6",
-    "bs-platform": "^4.0.7",
-    "html-webpack-plugin": "^3.2.0",
-    "webpack": "^4.0.1",
-    "webpack-cli": "^3.1.1",
-    "webpack-dev-server": "^3.1.8"
+    "@types/jest": "^23.3.13",
+    "@types/node": "^10.12.21",
+    "@types/react": "^16.8.1",
+    "@types/react-dom": "^16.0.11",
+    "typescript": "^3.3.1"
   }
 }
