@@ -79,12 +79,21 @@ class App extends React.Component<Props, State> {
     return (len > 0) ? this.programToString(this.state.steps[len - 1]) : "";
   }
 
+  exportTrace(t: ComponentProgram[]) {
+    let content = JSON.stringify(t);
+    let hidden = document.createElement('a');
+    hidden.href = 'data:text;charset=utf-8,' + encodeURI(content);
+    hidden.target = "_blank";
+    hidden.download = 'trace.txt';
+    hidden.click();
+  }
+
   public render() {
     return (
       <div className="App">
         <header className="App-header">
           <button onClick={() => { this.replaceText() }}>Replace text</button>
-          <button onClick={() => { console.log("hello") }}>Export trace</button>
+          <button onClick={() => { this.exportTrace(this.state.steps) }}>Export trace</button>
         </header>
         <PreviousStep code={this.previousCode()} onMount={editor => { this.setState({ ... this.state, reference: editor }) }} />
         <ResultingCode onMount={editor => {
