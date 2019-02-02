@@ -6,40 +6,19 @@ require('codemirror/mode/scheme/scheme');
 require('codemirror/mode/clike/clike');
 require('codemirror/mode/mllike/mllike')
 
-export interface Props {
-  code: string;
+interface Props {
   onMount: (editor: IInstance) => void;
-  positions?: {
-    from: CodeMirror.Position,
-    to: CodeMirror.Position
-  };
 }
 
 class Editor extends React.Component<Props> {
-  constructor(props: Props) {
-    super(props);
-  }
 
-  getSelection(): {from: CodeMirror.Position, to: CodeMirror.Position} | undefined {
-    if (this.instance != undefined) {
-      return {from: this.instance.getCursor("start"), to: this.instance.getCursor("end")};
-    }
-    else {
-      return undefined;
-    }
-  }
-  
   // might need to make text on change too since not persisting highlights
   render() {
-    const value = this.props.code;
-
     return (
       <CodeMirror
-        value={value}
+        value="edit here"
         options={{
           mode: 'text/x-ocaml',
-          lineNumbers: true,
-          readOnly: true,
         }}
         editorDidMount={this.props.onMount}
       />
