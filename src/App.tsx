@@ -31,16 +31,26 @@ class App extends React.Component<Props, State> {
     this.state = { steps: [] };
   }
 
+  endOfDocument(editor: IInstance): CodeMirror.Position {
+    let len = editor.lastLine();
+    let ch = editor.getLine(len).length;
+    return { line: len, ch };
+  }
+
   replaceText() {
     // get selection from reference, get pre and post,
     // add new thing to steps,
     let selection = this.getSelection(this.state.reference);
     if (selection != undefined) {
-      let pre = this.state.reference!.getRange({line: 0, ch: 0}, selection.from);
+      let pre = this.state.reference!.getRange({ line: 0, ch: 0 }, selection.from);
+
       let highlight = this.state.reference!.getRange(selection.from, selection.to);
-      let result = (this.state.replacement != undefined) ? this.state.replacement.getValue() : "WHOOPS, could not read your result";
-      let end = {ch: 0, line: 0};
-      let post = this.state.reference!.getRange(selection.to, end);
+
+      let result = (this.state.replacement != undefined) ?
+        this.state.replacement.getValue() :
+        "WHOOPS, could not read your result";
+
+      let post = this.state.reference!.getRange(selection.to, this.endOfDocument(this.state.reference!));
 
       this.state.steps.push({ pre, highlight, result, post });
       this.forceUpdate();
@@ -73,8 +83,8 @@ class App extends React.Component<Props, State> {
     return (
       <div className="App">
         <header className="App-header">
-          <button onClick={() => { console.log("hello") }}>Select Text</button>
           <button onClick={() => { this.replaceText() }}>Replace text</button>
+          <button onClick={() => { console.log("hello") }}>Export trace</button>
         </header>
         <PreviousStep code={this.previousCode()} onMount={editor => { this.setState({ ... this.state, reference: editor }) }} />
         <ResultingCode onMount={editor => {
