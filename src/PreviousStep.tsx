@@ -20,15 +20,6 @@ class Editor extends React.Component<Props> {
     super(props);
   }
 
-  getSelection(): {from: CodeMirror.Position, to: CodeMirror.Position} | undefined {
-    if (this.instance != undefined) {
-      return {from: this.instance.getCursor("start"), to: this.instance.getCursor("end")};
-    }
-    else {
-      return undefined;
-    }
-  }
-  
   // might need to make text on change too since not persisting highlights
   render() {
     const value = this.props.code;
