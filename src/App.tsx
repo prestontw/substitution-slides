@@ -3,6 +3,7 @@ import './App.css';
 import PreviousStep from './PreviousStep';
 import ResultingCode from './ResultingCode';
 import { IInstance } from 'react-codemirror2';
+import * as Util from './Util';
 
 export interface ComponentProgram {
   pre: string;
@@ -42,6 +43,7 @@ class App extends React.Component<Props, State> {
     // add new thing to steps,
     let selection = this.getSelection(this.state.reference);
     if (selection != undefined) {
+      console.log(this.state.reference!.getValue());
       let pre = this.state.reference!.getRange({ line: 0, ch: 0 }, selection.from);
 
       let highlight = this.state.reference!.getRange(selection.from, selection.to);
@@ -80,7 +82,7 @@ class App extends React.Component<Props, State> {
   }
 
   exportTrace(t: ComponentProgram[]) {
-    let content = JSON.stringify(t);
+    let content = Util.formatPrograms(t);
     let hidden = document.createElement('a');
     hidden.href = 'data:text;charset=utf-8,' + encodeURI(content);
     hidden.target = "_blank";
