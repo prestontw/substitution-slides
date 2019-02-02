@@ -4,7 +4,7 @@ import PreviousStep from './PreviousStep';
 import ResultingCode from './ResultingCode';
 import { IInstance } from 'react-codemirror2';
 
-interface ComponentProgram {
+export interface ComponentProgram {
   pre: string;
   highlight: string;
   result: string;
