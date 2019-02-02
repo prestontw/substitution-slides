@@ -4,12 +4,20 @@ import PreviousStep from './PreviousStep';
 import ResultingCode from './ResultingCode';
 import { IInstance } from 'react-codemirror2';
 
+interface ComponentProgram {
+  pre: string;
+  highlight: string;
+  result: string;
+  post: string,
+}
+
 interface State {
-  steps: string[];
+  steps: ComponentProgram[];
   selection?: { from: CodeMirror.Position, to: CodeMirror.Position };
   reference?: IInstance;
   replacement?: IInstance;
 }
+
 interface Props {
 
 }
@@ -17,20 +25,36 @@ interface Props {
 class App extends React.Component<Props, State> {
   constructor(props: Props) {
     super(props);
-    this.state = { steps: [], selection: undefined };
+    this.state = { steps: [] };
   }
 
   replaceText() {
-
+    let result = (this.state.replacement != undefined)? this.state.replacement.getValue() : "WHOOPS, could not read your result";
+    // get selection from reference, get pre and post,
+    // add new thing to steps,
+    this.state.steps.push({pre: "", highlight: "", result, post: ""});
+    this.forceUpdate();
+    console.log(this.state.steps);
+    console.log("hello");
   }
+
+  programToString(p: ComponentProgram): string {
+    return p.pre + p.result + p.post;
+  }
+  previousCode(): string {
+    let len = this.state.steps.length;
+    console.log(len);
+    return (len > 0)? this.programToString(this.state.steps[len - 1]) : "";
+  }
+
   public render() {
     return (
       <div className="App">
         <header className="App-header">
-          <button onClick={() => { }}>Select Text</button>
-          <button onClick={this.replaceText}>Replace text</button>
+          <button onClick={() => {console.log("hello")}}>Select Text</button>
+          <button onClick={() => {this.replaceText()}}>Replace text</button>
         </header>
-        <PreviousStep code="hello(amanda)" onMount={editor => { this.setState({... this.state, reference: editor })}} />
+        <PreviousStep code={this.previousCode()} onMount={editor => { this.setState({ ... this.state, reference: editor }) }} />
         <ResultingCode onMount={editor => {
           this.setState({ ...this.state, replacement: editor });
         }} />
