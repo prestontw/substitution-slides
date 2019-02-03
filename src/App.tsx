@@ -100,7 +100,8 @@ class App extends React.Component<Props, State> {
         <PreviousStep code={this.previousCode()} onMount={editor => { this.setState({ ... this.state, reference: editor }) }} />
         <ResultingCode onMount={editor => {
           this.setState({ ...this.state, replacement: editor });
-        }} />
+        }} 
+        run={_cm => this.replaceText()}/>
       </div>
     );
   }

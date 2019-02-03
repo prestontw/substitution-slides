@@ -8,8 +8,10 @@ require('codemirror/mode/mllike/mllike')
 
 interface Props {
   onMount: (editor: IInstance) => void;
+  run: (cm: IInstance) => void;
 }
 
+// setOption extraKeys
 class Editor extends React.Component<Props> {
 
   // might need to make text on change too since not persisting highlights
@@ -19,6 +21,9 @@ class Editor extends React.Component<Props> {
         value="edit here"
         options={{
           mode: 'text/x-ocaml',
+          extraKeys: {
+            "Ctrl-Enter": this.props.run
+          },
         }}
         editorDidMount={this.props.onMount}
       />
