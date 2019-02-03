@@ -25,6 +25,7 @@ class Editor extends React.Component<Props> {
     const value = this.props.code;
 
     return (
+      <div className="PreviousStep">
       <CodeMirror
         value={value}
         options={{
@@ -33,7 +34,7 @@ class Editor extends React.Component<Props> {
           readOnly: true,
         }}
         editorDidMount={this.props.onMount}
-      />
+      /></div>
     );
   }
 }

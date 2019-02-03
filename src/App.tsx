@@ -94,15 +94,16 @@ class App extends React.Component<Props, State> {
     return (
       <div className="App">
         <header className="App-header">
-          <button onClick={() => { this.replaceText() }}>Replace text</button>
-          <button onClick={() => { this.exportTrace(this.state.steps) }}>Export trace</button>
+          <button className="replace" onClick={() => { this.replaceText() }}>Replace text</button>
+          <button className="export" onClick={() => { this.exportTrace(this.state.steps) }}>Export trace</button>
         </header>
-        <PreviousStep code={this.previousCode()} onMount={editor => { this.setState({ ... this.state, reference: editor }) }} />
-        <ResultingCode onMount={editor => {
-          this.setState({ ...this.state, replacement: editor });
-        }} 
-        run={_cm => this.replaceText()}/>
-      </div>
+        <div className="App-body">
+          <PreviousStep code={this.previousCode()} onMount={editor => { this.setState({ ... this.state, reference: editor }) }} />
+          <ResultingCode onMount={editor => {
+            this.setState({ ...this.state, replacement: editor });
+          }}
+            run={_cm => this.replaceText()} />
+        </div></div>
     );
   }
 }

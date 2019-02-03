@@ -17,6 +17,7 @@ class Editor extends React.Component<Props> {
   // might need to make text on change too since not persisting highlights
   render() {
     return (
+      <div className="ResultingCode">
       <CodeMirror
         value="edit here"
         options={{
@@ -26,7 +27,7 @@ class Editor extends React.Component<Props> {
           },
         }}
         editorDidMount={this.props.onMount}
-      />
+      /></div>
     );
   }
 }
