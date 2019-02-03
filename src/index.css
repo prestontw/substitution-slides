@@ -5,6 +5,10 @@ body {
   height: 100%;
 }
 
+html, #root {
+  height: 100%;
+}
+
 .replace {
   background-color: #bebebe;
   border: none;
