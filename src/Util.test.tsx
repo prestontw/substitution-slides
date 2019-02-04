@@ -71,3 +71,14 @@ it('indents normal correctly (starting space)', () => {
   else
     fact(n - 1)`)
 })
+/**
+ * assuming things have been indented well before now, so
+ * months... 
+ *     something
+ * either shouldn't happen or should be correct
+ */ 
+it('handles two lines well', () => {
+  expect(Util.reindentProgram("", `months_to_buy(receive_allowance {},
+  receive_allowance {}, 0 + 1)`)).toEqual(`months_to_buy(receive_allowance {},
+  receive_allowance {}, 0 + 1)`)
+})
