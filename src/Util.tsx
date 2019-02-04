@@ -11,23 +11,62 @@ export function formatString(s: string): string {
   return s.replace("\\n", "\n");
 }
 
-export function indentProgram(): string {
-  return ""
+export function getLastLine(s: string): string {
+  let list = s.split("\n");
+  return list[list.length - 1];
 }
 
-// have one that removes indentation of first line from every replace, then adds indentation of highlighted line to every one
+export function reindentProgram(prefix: string, program: string): string {
+  // strip program, then add prefixed spaces of prefix to stripped
+  let numToAdd = numSpacePrefixString(prefix);
+  let strippedString = stripProgram(program);
+  if (numToAdd == 0) {
+    return strippedString
+  }
+  else {
+    let stripped = strippedString.split("\n");
+    let pre = " ".repeat(numToAdd);
+    return stripped.map(s => pre + s).join("\n")
+  }
+}
 
-// have another one does difference between first and second and second and third, etc., then uses the indentation of the highlight line
-// as the basis for those things again:
-/*
-  something
-    else
-  here
-    too
-  yields 0, +1, - 1 (or 0), depnds on schema, then use basis
-*/
+export function stripProgram(p: string): string {
+  let lines = p.split("\n");
+  // check if first line has any indentation
+  if (lines[0].length > 0 && lines[0].charAt(0) == " ") {
+    let numSpaces = minNumSpacePrefix(lines);
+    return removePrefixes(lines, " ".repeat(numSpaces)).join("\n")
+  }
+  else {
+    if (lines.length == 1) {
+      return lines[0];
+    }
+    else {
+      let laterLines = lines.splice(1);
+      let numSpaces = minNumSpacePrefix(laterLines);
+      return lines[0] + "\n" + removePrefixes(laterLines, " ".repeat(numSpaces)).join("\n")
+    }
+  }
+}
 
-// take left-most line besides the first and remove spacing in front of it; remove same spacing from all other lines but first
+export function numSpacePrefixString(s: string): number {
+  let index = 0;
+  while (s.charAt(index) == " ")
+    index += 1;
+  return index;
+}
 
-// actually not too sure if should have this auto-indent without
-// showing users how this will look...
+export function minNumSpacePrefix(ss: string[]): number {
+  if (ss.length > 0)
+    return ss.map(numSpacePrefixString).reduce((a, b) => (a < b) ? a : b);
+  else
+    return 0;
+}
+
+function removePrefixes(ss: string[], prefix: string): string[] {
+  let re = new RegExp("^" + prefix);
+  return ss.map(s => removePrefix(s, re))
+}
+function removePrefix(s: string, prefix: RegExp): string {
+  return s.replace(prefix, '');
+}

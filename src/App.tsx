@@ -51,10 +51,12 @@ class App extends React.Component<Props, State> {
       let result = (this.state.replacement != undefined) ?
         this.state.replacement.getValue() :
         "WHOOPS, could not read your result";
+      
+      let indentedResult = Util.reindentProgram(Util.getLastLine(pre), result);
 
       let post = this.state.reference!.getRange(selection.to, this.endOfDocument(this.state.reference!));
 
-      this.state.steps.push({ pre, highlight, result, post });
+      this.state.steps.push({ pre, highlight, result: indentedResult, post });
       this.forceUpdate();
       this.state.replacement!.setValue("");
     }
