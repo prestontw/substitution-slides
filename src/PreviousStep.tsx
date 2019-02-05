@@ -1,21 +1,13 @@
 import * as React from "react";
-import { UnControlled as CodeMirror, IInstance } from 'react-codemirror2';
-// following line is so important!
-import 'codemirror/lib/codemirror.css';
-require('codemirror/mode/scheme/scheme');
-require('codemirror/mode/clike/clike');
-require('codemirror/mode/mllike/mllike')
+import {IInstance} from 'react-codemirror2';
+import Editor from './Editor';
 
 export interface Props {
   code: string;
   onMount: (editor: IInstance) => void;
-  positions?: {
-    from: CodeMirror.Position,
-    to: CodeMirror.Position
-  };
 }
 
-class Editor extends React.Component<Props> {
+class PreviousStep extends React.Component<Props> {
   constructor(props: Props) {
     super(props);
   }
@@ -26,23 +18,16 @@ class Editor extends React.Component<Props> {
 
     return (
       <div className="PreviousStep">
-      <CodeMirror
-        value={value}
-        options={{
-          mode: 'text/x-ocaml',
-          lineNumbers: true,
-          readOnly: true,
-        }}
-        editorDidMount={this.props.onMount}
+      <Editor
+        code={value}
+        mode='text/x-ocaml'
+        modePath={require('codemirror/mode/mllike/mllike')}
+        lineNumbers={true}
+        readOnly={true}
+        onMount={this.props.onMount}
       /></div>
     );
   }
 }
 
-export default Editor;
-
-/*
-render() {
-  <CodeMirror editorDidMount={editor => { editor.markText(...) }}/>
-}
-*/
+export default PreviousStep;
