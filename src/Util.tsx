@@ -25,8 +25,13 @@ export function reindentProgram(prefix: string, program: string): string {
   }
   else {
     let stripped = strippedString.split("\n");
-    let pre = " ".repeat(numToAdd);
-    return stripped.map(s => pre + s).join("\n")
+    if (stripped.length == 1) {
+      return strippedString;
+    }
+    else {
+      let pre = " ".repeat(numToAdd);
+      return stripped.map(s => pre + s).join("\n")
+    }
   }
 }
 
