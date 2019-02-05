@@ -51,13 +51,15 @@ class App extends React.Component<Props, State> {
       let result = (this.state.replacement != undefined) ?
         this.state.replacement.getValue() :
         "WHOOPS, could not read your result";
-      
+
       let indentedResult = Util.reindentProgram(Util.getLastLine(pre), result);
 
       let post = this.state.reference!.getRange(selection.to, this.endOfDocument(this.state.reference!));
 
-      this.state.steps.push({ pre, highlight, result: indentedResult, post });
-      this.forceUpdate();
+      this.setState({
+        ...this.state,
+        steps: this.state.steps.concat([{ pre, highlight, result: indentedResult, post }])
+      });
       this.state.replacement!.setValue("");
     }
     else {
@@ -82,6 +84,15 @@ class App extends React.Component<Props, State> {
     console.log(len);
     return (len > 0) ? this.programToString(this.state.steps[len - 1]) : "";
   }
+  removeLastStep() {
+    let len = this.state.steps.length;
+    if (len > 0) {
+      this.setState({...this.state, steps: this.state.steps.splice(0, len - 1)})
+    }
+    else {
+      // don't remove anything from empty array
+    }
+  }
 
   exportTrace(t: ComponentProgram[]) {
     let content = Util.formatPrograms(t);
@@ -96,6 +107,7 @@ class App extends React.Component<Props, State> {
     return (
       <div className="App">
         <header className="App-header">
+          <button className="remove" onClick={() => { this.removeLastStep() }}>Remove last</button>
           <button className="replace" onClick={() => { this.replaceText() }}>Replace text</button>
           <button className="export" onClick={() => { this.exportTrace(this.state.steps) }}>Export trace</button>
         </header>
