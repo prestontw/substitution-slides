@@ -35,6 +35,14 @@ else
   fact(n - 1)`)
 })
 
+it('strips two line program', () => {
+  expect(Util.stripProgram(`months_to_buy_xbox(receive_allowance { amount = 119; allowance = 23 },
+    receive_allowance { amount = 86; allowance = 14 }, 0 + 1)`)).toEqual(
+    `months_to_buy_xbox(receive_allowance { amount = 119; allowance = 23 },
+  receive_allowance { amount = 86; allowance = 14 }, 0 + 1)`
+    )
+})
+
 it('indents helpful correctly (no space)', () => {
   expect(Util.reindentProgram("fact 5", `  if n < 1
     1
@@ -76,8 +84,8 @@ it('indents normal correctly (starting space)', () => {
  * months... 
  *     something
  * either shouldn't happen or should be correct
- */ 
-it('handles two lines well', () => {
+ */
+it("doesn't remove second line spacing in two line program", () => {
   expect(Util.reindentProgram("", `months_to_buy(receive_allowance {},
   receive_allowance {}, 0 + 1)`)).toEqual(`months_to_buy(receive_allowance {},
   receive_allowance {}, 0 + 1)`)

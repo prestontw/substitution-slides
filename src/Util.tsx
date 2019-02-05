@@ -41,6 +41,9 @@ export function stripProgram(p: string): string {
     if (lines.length == 1) {
       return lines[0];
     }
+    else if (lines.length == 2) {
+      return p;
+    }
     else {
       let laterLines = lines.splice(1);
       let numSpaces = minNumSpacePrefix(laterLines);
