@@ -21,6 +21,7 @@ interface State {
   steps: ComponentProgram[];
   reference?: IInstance;
   replacement?: string;
+  replacementEditor?: IInstance;
   showPreview: boolean;
 }
 
@@ -68,10 +69,9 @@ class App extends React.Component<Props, State> {
       this.setState({
         ...this.state,
         steps: this.state.steps.concat([newProgram]),
-        showPreview: false,
         replacement: ""
       });
-      // this.state.replacement!.setValue("");
+      this.state.replacementEditor!.setValue("");
     }
   }
 
@@ -96,7 +96,7 @@ class App extends React.Component<Props, State> {
     return (len > 0) ? this.programToString(this.state.steps[len - 1])! : "";
   }
   previewReplace() {
-    this.setState({ ... this.state, showPreview: true })
+    this.setState({ ... this.state, showPreview: !this.state.showPreview })
   }
   removeLastStep() {
     let len = this.state.steps.length;
@@ -122,15 +122,17 @@ class App extends React.Component<Props, State> {
       <div className="App">
         <header className="App-header">
           <button className="remove" onClick={() => { this.removeLastStep() }}>Remove last</button>
-          <button className="preview" onClick={() => { this.previewReplace() }}>Preview</button>
+          <button className="preview" onClick={() => { this.previewReplace() }}>Toggle preview</button>
           <button className="replace" onClick={() => { this.replaceText() }}>Replace text</button>
           <button className="export" onClick={() => { this.exportTrace(this.state.steps) }}>Export trace</button>
         </header>
         <div className="App-body">
           <PreviousStep code={this.previousCode()} onMount={editor => { this.setState({ ... this.state, reference: editor }) }} />
-          <ResultingCode onChange={value => {
-            this.setState({ ...this.state, replacement: value });
-          }}
+          <ResultingCode
+            onMount={editor => { this.setState({ ...this.state, replacementEditor: editor }) }}
+            onChange={value => {
+              this.setState({ ...this.state, replacement: value });
+            }}
             run={_cm => this.replaceText()} />
           {(this.state.showPreview) ?
             <div><p>Preview!</p>
