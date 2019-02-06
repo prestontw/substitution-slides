@@ -1,12 +1,11 @@
 import * as React from "react";
-import { IInstance } from 'react-codemirror2';
+// import { IInstance } from 'react-codemirror2';
 import Editor from './Editor';
 // following line is so important!
 import 'codemirror/lib/codemirror.css';
 let dep = require('codemirror/mode/mllike/mllike')
 
 interface Props {
-  onMount: (editor: IInstance) => void;
   code: string;
   // maybe want to have highlights for position?
 }
@@ -23,7 +22,7 @@ class CodePreview extends React.Component<Props> {
           modePath={dep}
           readOnly={true}
           lineNumbers={true}
-          onMount={this.props.onMount}
+          onMount={() => {}}
         /></div>
     );
   }

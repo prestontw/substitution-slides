@@ -2,6 +2,7 @@ import * as React from 'react';
 import './App.css';
 import PreviousStep from './PreviousStep';
 import ResultingCode from './ResultingCode';
+import Preview from './Preview';
 import { IInstance } from 'react-codemirror2';
 import * as Util from './Util';
 
@@ -20,6 +21,7 @@ interface State {
   steps: ComponentProgram[];
   reference?: IInstance;
   replacement?: IInstance;
+  showPreview: boolean;
 }
 
 interface Props {
@@ -29,7 +31,7 @@ interface Props {
 class App extends React.Component<Props, State> {
   constructor(props: Props) {
     super(props);
-    this.state = { steps: [] };
+    this.state = { steps: [], showPreview: false };
   }
 
   endOfDocument(editor: IInstance): CodeMirror.Position {
@@ -65,7 +67,8 @@ class App extends React.Component<Props, State> {
     if (newProgram != undefined) {
       this.setState({
         ...this.state,
-        steps: this.state.steps.concat([newProgram])
+        steps: this.state.steps.concat([newProgram]),
+        showPreview: false
       });
       this.state.replacement!.setValue("");
     }
@@ -87,6 +90,9 @@ class App extends React.Component<Props, State> {
     let len = this.state.steps.length;
     console.log(len);
     return (len > 0) ? this.programToString(this.state.steps[len - 1]) : "";
+  }
+  previewReplace() {
+    this.setState({ ... this.state, showPreview: true })
   }
   removeLastStep() {
     let len = this.state.steps.length;
@@ -112,6 +118,7 @@ class App extends React.Component<Props, State> {
       <div className="App">
         <header className="App-header">
           <button className="remove" onClick={() => { this.removeLastStep() }}>Remove last</button>
+          <button className="preview" onClick={() => { this.previewReplace() }}>Preview</button>
           <button className="replace" onClick={() => { this.replaceText() }}>Replace text</button>
           <button className="export" onClick={() => { this.exportTrace(this.state.steps) }}>Export trace</button>
         </header>
@@ -121,6 +128,12 @@ class App extends React.Component<Props, State> {
             this.setState({ ...this.state, replacement: editor });
           }}
             run={_cm => this.replaceText()} />
+          {(this.state.showPreview) ?
+            <div><p>Preview!</p>
+              <Preview code={this.programToString(this.getNewProgram(this.state.reference!,
+                this.state.replacement!)!)} />
+            </div> :
+            undefined}
         </div>
       </div>
     );
