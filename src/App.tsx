@@ -38,32 +38,36 @@ class App extends React.Component<Props, State> {
     return { line: len, ch };
   }
 
-  replaceText() {
-    // get selection from reference, get pre and post,
-    // add new thing to steps,
-    let selection = this.getSelection(this.state.reference);
+  getNewProgram(reference: IInstance, replace: IInstance): ComponentProgram | undefined {
+    let selection = this.getSelection(reference);
     if (selection != undefined) {
-      console.log(this.state.reference!.getValue());
-      let pre = this.state.reference!.getRange({ line: 0, ch: 0 }, selection.from);
+      let pre = reference.getRange({ line: 0, ch: 0 }, selection.from);
 
-      let highlight = this.state.reference!.getRange(selection.from, selection.to);
+      let highlight = reference.getRange(selection.from, selection.to);
 
-      let result = (this.state.replacement != undefined) ?
-        this.state.replacement.getValue() :
-        "WHOOPS, could not read your result";
+      let result = replace.getValue();
 
       let indentedResult = Util.reindentProgram(Util.getLastLine(pre), result);
 
-      let post = this.state.reference!.getRange(selection.to, this.endOfDocument(this.state.reference!));
+      let post = reference.getRange(selection.to, this.endOfDocument(reference));
 
-      this.setState({
-        ...this.state,
-        steps: this.state.steps.concat([{ pre, highlight, result: indentedResult, post }])
-      });
-      this.state.replacement!.setValue("");
+      return { pre, highlight, result: indentedResult, post };
     }
     else {
-      return;
+      return undefined;
+    }
+  }
+
+  replaceText() {
+    // get selection from reference, get pre and post,
+    // add new thing to steps,
+    let newProgram = this.getNewProgram(this.state.reference!, this.state.replacement!)
+    if (newProgram != undefined) {
+      this.setState({
+        ...this.state,
+        steps: this.state.steps.concat([newProgram])
+      });
+      this.state.replacement!.setValue("");
     }
   }
 
@@ -87,7 +91,7 @@ class App extends React.Component<Props, State> {
   removeLastStep() {
     let len = this.state.steps.length;
     if (len > 0) {
-      this.setState({...this.state, steps: this.state.steps.splice(0, len - 1)})
+      this.setState({ ...this.state, steps: this.state.steps.splice(0, len - 1) })
     }
     else {
       // don't remove anything from empty array
@@ -117,7 +121,8 @@ class App extends React.Component<Props, State> {
             this.setState({ ...this.state, replacement: editor });
           }}
             run={_cm => this.replaceText()} />
-        </div></div>
+        </div>
+      </div>
     );
   }
 }
