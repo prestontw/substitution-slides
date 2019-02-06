@@ -13,7 +13,7 @@ export interface ComponentProgram {
   post: string,
 }
 
-interface Selection {
+export interface Selection {
   from: CodeMirror.Position;
   to: CodeMirror.Position;
 }
@@ -136,8 +136,10 @@ class App extends React.Component<Props, State> {
             run={_cm => this.replaceText()} />
           {(this.state.showPreview) ?
             <div><p>Preview!</p>
-              <Preview code={this.programToString(this.getNewProgram(this.state.reference,
-                this.state.replacement))} />
+              <Preview
+                positions={this.getSelection(this.state.reference)}
+                code={this.programToString(this.getNewProgram(this.state.reference,
+                  this.state.replacement))} />
             </div> :
             undefined}
         </div>

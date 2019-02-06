@@ -21,6 +21,10 @@
   font-size: large;
 }
 
+.highlighted {
+  background-color: yellow;
+}
+
 .react-codemirror2 {
   border: black;
   border-width: 3px;
