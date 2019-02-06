@@ -20,7 +20,7 @@ interface Selection {
 interface State {
   steps: ComponentProgram[];
   reference?: IInstance;
-  replacement?: IInstance;
+  replacement?: string;
   showPreview: boolean;
 }
 
@@ -40,18 +40,18 @@ class App extends React.Component<Props, State> {
     return { line: len, ch };
   }
 
-  getNewProgram(reference: IInstance, replace: IInstance): ComponentProgram | undefined {
+  getNewProgram(reference?: IInstance, replace?: string): ComponentProgram | undefined {
     let selection = this.getSelection(reference);
-    if (selection != undefined) {
-      let pre = reference.getRange({ line: 0, ch: 0 }, selection.from);
+    if (selection != undefined && replace != undefined) {
+      let pre = reference!.getRange({ line: 0, ch: 0 }, selection.from);
 
-      let highlight = reference.getRange(selection.from, selection.to);
+      let highlight = reference!.getRange(selection.from, selection.to);
 
-      let result = replace.getValue();
+      let result = replace;
 
       let indentedResult = Util.reindentProgram(Util.getLastLine(pre), result);
 
-      let post = reference.getRange(selection.to, this.endOfDocument(reference));
+      let post = reference!.getRange(selection.to, this.endOfDocument(reference!));
 
       return { pre, highlight, result: indentedResult, post };
     }
@@ -68,9 +68,10 @@ class App extends React.Component<Props, State> {
       this.setState({
         ...this.state,
         steps: this.state.steps.concat([newProgram]),
-        showPreview: false
+        showPreview: false,
+        replacement: ""
       });
-      this.state.replacement!.setValue("");
+      // this.state.replacement!.setValue("");
     }
   }
 
@@ -83,13 +84,16 @@ class App extends React.Component<Props, State> {
     }
   }
 
-  programToString(p: ComponentProgram): string {
-    return p.pre + p.result + p.post;
+  programToString(p?: ComponentProgram): string | undefined {
+    if (p != undefined)
+      return p.pre + p.result + p.post;
+    else
+      return undefined;
   }
   previousCode(): string {
     let len = this.state.steps.length;
     console.log(len);
-    return (len > 0) ? this.programToString(this.state.steps[len - 1]) : "";
+    return (len > 0) ? this.programToString(this.state.steps[len - 1])! : "";
   }
   previewReplace() {
     this.setState({ ... this.state, showPreview: true })
@@ -124,14 +128,14 @@ class App extends React.Component<Props, State> {
         </header>
         <div className="App-body">
           <PreviousStep code={this.previousCode()} onMount={editor => { this.setState({ ... this.state, reference: editor }) }} />
-          <ResultingCode onMount={editor => {
-            this.setState({ ...this.state, replacement: editor });
+          <ResultingCode onChange={value => {
+            this.setState({ ...this.state, replacement: value });
           }}
             run={_cm => this.replaceText()} />
           {(this.state.showPreview) ?
             <div><p>Preview!</p>
-              <Preview code={this.programToString(this.getNewProgram(this.state.reference!,
-                this.state.replacement!)!)} />
+              <Preview code={this.programToString(this.getNewProgram(this.state.reference,
+                this.state.replacement))} />
             </div> :
             undefined}
         </div>

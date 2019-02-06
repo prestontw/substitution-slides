@@ -6,7 +6,7 @@ import 'codemirror/lib/codemirror.css';
 let dep = require('codemirror/mode/mllike/mllike')
 
 interface Props {
-  onMount: (editor: IInstance) => void;
+  onChange: (value: string) => void;
   run: (cm: IInstance) => void;
 }
 
@@ -25,7 +25,8 @@ class ResultingCode extends React.Component<Props> {
           extraKeys={{
             "Ctrl-Enter": this.props.run
           }}
-          onMount={this.props.onMount}
+          onMount={() => {}}
+          onChange={(_e, _d, value) => {this.props.onChange(value)}}
         /></div>
     );
   }

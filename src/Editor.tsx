@@ -11,6 +11,7 @@ interface Props {
   mode: string;
   readOnly?: boolean;
   lineNumbers?: boolean;
+  onChange?: (editor: IInstance, data: CodeMirror.EditorChange, value: string) => void;
 }
 
 // setOption extraKeys
@@ -27,6 +28,7 @@ class Editor extends React.Component<Props> {
           readOnly: this.props.readOnly,
         }}
         editorDidMount={this.props.onMount}
+        onChange={this.props.onChange}
       />
     );
   }

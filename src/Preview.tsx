@@ -6,7 +6,7 @@ import 'codemirror/lib/codemirror.css';
 let dep = require('codemirror/mode/mllike/mllike')
 
 interface Props {
-  code: string;
+  code?: string;
   // maybe want to have highlights for position?
 }
 
