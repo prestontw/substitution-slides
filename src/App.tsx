@@ -41,6 +41,12 @@ class App extends React.Component<Props, State> {
     return { line: len, ch };
   }
 
+  getPre(editor: IInstance | undefined, selection: Selection | undefined): string | undefined {
+    if (editor != undefined && selection != undefined)
+      return editor.getRange({ line: 0, ch: 0 }, selection.from);
+    else
+      return undefined;
+  }
   getNewProgram(reference?: IInstance, replace?: string): ComponentProgram | undefined {
     let selection = this.getSelection(reference);
     if (selection != undefined && replace != undefined) {
@@ -107,6 +113,29 @@ class App extends React.Component<Props, State> {
       // don't remove anything from empty array
     }
   }
+  getLast<A>(arr: A[]): A | undefined {
+    let len = arr.length;
+    if (len > 0) {
+      return arr[len - 1];
+    }
+    else {
+      return undefined;
+    }
+  }
+
+  highlightStartAndEnd(prefix: string | undefined, highlight: string | undefined): Selection | undefined {
+    if (prefix == undefined || highlight == undefined) {
+      return undefined
+    }
+    let pArr = prefix.split("\n");
+    let hArr = highlight.split("\n");
+    let pLast = this.getLast(pArr);
+    let hLast = this.getLast(hArr);
+    let start = { line: pArr.length - 1, ch: (pLast ? pLast.length : 0) };
+    // if on same line need to add them together
+    let end = { line: start.line + hArr.length - 1, ch: ((hArr.length == 1) ? start.ch : 0) + (hLast ? hLast.length : 0) }
+    return { from: start, to: end };
+  }
 
   exportTrace(t: ComponentProgram[]) {
     let content = Util.formatPrograms(t);
@@ -137,7 +166,7 @@ class App extends React.Component<Props, State> {
           {(this.state.showPreview) ?
             <div><p>Preview!</p>
               <Preview
-                positions={this.getSelection(this.state.reference)}
+                positions={this.highlightStartAndEnd(this.getPre(this.state.reference, this.getSelection(this.state.reference)), this.state.replacement)}
                 code={this.programToString(this.getNewProgram(this.state.reference,
                   this.state.replacement))} />
             </div> :
