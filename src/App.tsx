@@ -76,6 +76,7 @@ class App extends React.Component<Props, State> {
       this.setState({
         ...this.state,
         steps: this.state.steps.concat([newProgram]),
+        replacement: "",
       });
       // this.state.replacementEditor!.setValue("");
     }
@@ -159,6 +160,7 @@ class App extends React.Component<Props, State> {
         <div className="App-body">
           <PreviousStep code={this.previousCode()} onMount={editor => { this.setState({ ... this.state, reference: editor }) }} />
           <ResultingCode
+            code={this.state.replacement != undefined ? this.state.replacement : "edit here"}
             onMount={editor => { this.setState({ ...this.state, replacementEditor: editor }) }}
             onChange={value => {
               this.setState({ ...this.state, replacement: value });

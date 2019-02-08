@@ -6,6 +6,7 @@ import 'codemirror/lib/codemirror.css';
 let dep = require('codemirror/mode/mllike/mllike')
 
 interface Props {
+  code: string;
   onMount: (editor: IInstance) => void;
   onChange: (value: string) => void;
   run: (cm: IInstance) => void;
@@ -18,7 +19,7 @@ class ResultingCode extends React.Component<Props> {
     return (
       <div className="ResultingCode">
         <Editor
-          code="edit here"
+          code={this.props.code}
           mode='text/x-ocaml'
           modePath={dep}
           readOnly={false}
