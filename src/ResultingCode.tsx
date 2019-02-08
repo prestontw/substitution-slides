@@ -3,24 +3,21 @@ import { Controlled as CodeMirror, IInstance } from 'react-codemirror2';
 // following line is so important!
 import 'codemirror/lib/codemirror.css';
 
-interface State {
-  value: string;
-}
 interface Props {
   code: string;
   onMount: (editor: IInstance) => void;
-  onChange: (value: string) => void;
+  onBeforeChange: (value: string) => void;
   run: (cm: IInstance) => void;
 }
 
 // setOption extraKeys
-class ResultingCode extends React.Component<Props, State> {
+class ResultingCode extends React.Component<Props> {
 
   render() {
     return (
       <div className="ResultingCode">
         <CodeMirror
-          value={this.state == undefined? "edit here" : this.state.value}
+          value={this.props.code}
           options={{
             lineNumbers: false,
             mode: 'text/x-ocaml',
@@ -30,10 +27,9 @@ class ResultingCode extends React.Component<Props, State> {
             }
           }}
           onBeforeChange={(_editor, _data, value) => {
-            this.setState({value})
+            this.props.onBeforeChange(value);
           }}
           editorDidMount={this.props.onMount}
-          onChange={(_e, _d, value) => { this.props.onChange(value) }}
         /></div>
     );
   }

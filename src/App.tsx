@@ -162,7 +162,7 @@ class App extends React.Component<Props, State> {
           <ResultingCode
             code={this.state.replacement != undefined ? this.state.replacement : "edit here"}
             onMount={editor => { this.setState({ ...this.state, replacementEditor: editor }) }}
-            onChange={value => {
+            onBeforeChange={value => {
               this.setState({ ...this.state, replacement: value });
             }}
             run={_cm => this.replaceText()} />
