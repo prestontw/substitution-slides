@@ -1,10 +1,11 @@
 import * as React from "react";
-import { IInstance } from 'react-codemirror2';
-import Editor from './Editor';
+import { Controlled as CodeMirror, IInstance } from 'react-codemirror2';
 // following line is so important!
 import 'codemirror/lib/codemirror.css';
-let dep = require('codemirror/mode/mllike/mllike')
 
+interface State {
+  value: string;
+}
 interface Props {
   code: string;
   onMount: (editor: IInstance) => void;
@@ -13,22 +14,26 @@ interface Props {
 }
 
 // setOption extraKeys
-class ResultingCode extends React.Component<Props> {
+class ResultingCode extends React.Component<Props, State> {
 
   render() {
     return (
       <div className="ResultingCode">
-        <Editor
-          code={this.props.code}
-          mode='text/x-ocaml'
-          modePath={dep}
-          readOnly={false}
-          lineNumbers={false}
-          extraKeys={{
-            "Ctrl-Enter": this.props.run
+        <CodeMirror
+          value={this.state == undefined? "edit here" : this.state.value}
+          options={{
+            lineNumbers: false,
+            mode: 'text/x-ocaml',
+            readOnly: false,
+            extraKeys: {
+              "Ctrl-Enter": this.props.run
+            }
           }}
-          onMount={this.props.onMount}
-          onChange={(_e, _d, value) => {this.props.onChange(value)}}
+          onBeforeChange={(_editor, _data, value) => {
+            this.setState({value})
+          }}
+          editorDidMount={this.props.onMount}
+          onChange={(_e, _d, value) => { this.props.onChange(value) }}
         /></div>
     );
   }
