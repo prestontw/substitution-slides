@@ -77,7 +77,7 @@ class App extends React.Component<Props, State> {
         ...this.state,
         steps: this.state.steps.concat([newProgram]),
       });
-      this.state.replacementEditor!.setValue("");
+      // this.state.replacementEditor!.setValue("");
     }
   }
 
