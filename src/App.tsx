@@ -71,11 +71,11 @@ class App extends React.Component<Props, State> {
     // get selection from reference, get pre and post,
     // add new thing to steps,
     let newProgram = this.getNewProgram(this.state.reference!, this.state.replacement!)
+    console.log(newProgram);
     if (newProgram != undefined) {
       this.setState({
         ...this.state,
         steps: this.state.steps.concat([newProgram]),
-        replacement: ""
       });
       this.state.replacementEditor!.setValue("");
     }
@@ -128,8 +128,9 @@ class App extends React.Component<Props, State> {
       return undefined
     }
     let pArr = prefix.split("\n");
-    let hArr = highlight.split("\n");
     let pLast = this.getLast(pArr);
+    highlight = Util.reindentProgram(pLast? pLast : "", highlight);
+    let hArr = highlight.split("\n");
     let hLast = this.getLast(hArr);
     let start = { line: pArr.length - 1, ch: (pLast ? pLast.length : 0) };
     // if on same line need to add them together
@@ -152,7 +153,7 @@ class App extends React.Component<Props, State> {
         <header className="App-header">
           <button className="remove" onClick={() => { this.removeLastStep() }}>Remove last</button>
           <button className="preview" onClick={() => { this.previewReplace() }}>Toggle preview</button>
-          <button className="replace" onClick={() => { this.replaceText() }}>Replace text</button>
+          <button className="replace" onClick={() => this.replaceText()}>Replace text</button>
           <button className="export" onClick={() => { this.exportTrace(this.state.steps) }}>Export trace</button>
         </header>
         <div className="App-body">
