@@ -60,7 +60,7 @@ class App extends React.Component<Props, State> {
 
       let post = reference!.getRange(selection.to, this.endOfDocument(reference!));
 
-      return { pre, highlight, result: indentedResult, post };
+      return { pre, highlight, result: indentedResult!, post };
     }
     else {
       return undefined;
@@ -124,19 +124,45 @@ class App extends React.Component<Props, State> {
     }
   }
 
-  highlightStartAndEnd(prefix: string | undefined, highlight: string | undefined): Selection | undefined {
+  highlightCharStart(prefix: string | undefined): number {
+    return (prefix != undefined) ? prefix.length : 0;
+  }
+  highlightCharEnd(highlightedLines: string[], prefixLength: number): number {
+    let hlast = this.getLast(highlightedLines);
+    return ((highlightedLines.length == 1) ? prefixLength : 0) + (hlast != undefined ? hlast.length : 0);
+  }
+  highlightStartAndEnd(prefix: { lines: string[], stub: string } | undefined, highlight: string | undefined): Selection | undefined {
     if (prefix == undefined || highlight == undefined) {
       return undefined
     }
-    let pArr = prefix.split("\n");
-    let pLast = this.getLast(pArr);
-    highlight = Util.reindentProgram(pLast? pLast : "", highlight);
+    let pArr = prefix.lines;
+    let pLast = prefix.stub;
     let hArr = highlight.split("\n");
-    let hLast = this.getLast(hArr);
-    let start = { line: pArr.length - 1, ch: (pLast ? pLast.length : 0) };
+    let start = { line: pArr.length - 1, ch: this.highlightCharStart(pLast) };
     // if on same line need to add them together
-    let end = { line: start.line + hArr.length - 1, ch: ((hArr.length == 1) ? start.ch : 0) + (hLast ? hLast.length : 0) }
+    let end = { line: start.line + hArr.length - 1, ch: this.highlightCharEnd(hArr, start.ch) }
     return { from: start, to: end };
+  }
+  highlightPositions(reference: IInstance | undefined, replacement: string | undefined): Selection | undefined {
+
+    let preString = this.getPre(reference, this.getSelection(reference));
+    if (preString == undefined) return undefined;
+    let preLines = preString.split("\n");
+    let preStub = this.prefixStub(preLines)!; // can do this since preString is not undefined
+
+    let positions = this.highlightStartAndEnd({ lines: preLines, stub: preStub },
+      Util.reindentProgram(preStub, replacement));
+    return positions;
+  }
+
+  prefixStub(prefixLines: string[] | undefined): string | undefined {
+    if (prefixLines == undefined) {
+      return undefined;
+    }
+    else {
+      let pLast = this.getLast(prefixLines);
+      return pLast;
+    }
   }
 
   exportTrace(t: ComponentProgram[]) {
@@ -149,6 +175,15 @@ class App extends React.Component<Props, State> {
   }
 
   public render() {
+    let setReference = (editor: IInstance) => { this.setState({ ... this.state, reference: editor }) };
+    let setReplacementEditor = (editor: IInstance) => { this.setState({ ...this.state, replacementEditor: editor }) };
+    let setReplacement = (value: string) => { this.setState({ ...this.state, replacement: value }) };
+    let code = this.state.replacement != undefined ? this.state.replacement : "edit here";
+    // really, should do highlight positions after getting new program...
+    let positions = this.highlightPositions(this.state.reference, this.state.replacement);
+    let previewCode = this.programToString(this.getNewProgram(this.state.reference,
+      this.state.replacement));
+
     return (
       <div className="App">
         <header className="App-header">
@@ -158,20 +193,17 @@ class App extends React.Component<Props, State> {
           <button className="export" onClick={() => { this.exportTrace(this.state.steps) }}>Export trace</button>
         </header>
         <div className="App-body">
-          <PreviousStep code={this.previousCode()} onMount={editor => { this.setState({ ... this.state, reference: editor }) }} />
+          <PreviousStep code={this.previousCode()} onMount={setReference} />
           <ResultingCode
-            code={this.state.replacement != undefined ? this.state.replacement : "edit here"}
-            onMount={editor => { this.setState({ ...this.state, replacementEditor: editor }) }}
-            onBeforeChange={value => {
-              this.setState({ ...this.state, replacement: value });
-            }}
+            code={code}
+            onMount={setReplacementEditor}
+            onBeforeChange={setReplacement}
             run={_cm => this.replaceText()} />
           {(this.state.showPreview) ?
             <div><p>Preview!</p>
               <Preview
-                positions={this.highlightStartAndEnd(this.getPre(this.state.reference, this.getSelection(this.state.reference)), this.state.replacement)}
-                code={this.programToString(this.getNewProgram(this.state.reference,
-                  this.state.replacement))} />
+                positions={positions}
+                code={previewCode} />
             </div> :
             undefined}
         </div>

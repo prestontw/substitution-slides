@@ -16,23 +16,26 @@ export function getLastLine(s: string): string {
   return list[list.length - 1];
 }
 
-export function reindentProgram(prefix: string, program: string): string {
-  // strip program, then add prefixed spaces of prefix to stripped
-  let numToAdd = numSpacePrefixString(prefix);
-  let strippedString = stripProgram(program);
-  if (numToAdd == 0) {
-    return strippedString
-  }
-  else {
-    let stripped = strippedString.split("\n");
-    if (stripped.length == 1) {
-      return strippedString;
+export function reindentProgram(prefix: string, program: string | undefined): string | undefined {
+  if (program != undefined) {
+    // strip program, then add prefixed spaces of prefix to stripped
+    let numToAdd = numSpacePrefixString(prefix);
+    let strippedString = stripProgram(program);
+    if (numToAdd == 0) {
+      return strippedString
     }
     else {
-      let pre = " ".repeat(numToAdd);
-      return stripped.map(s => pre + s).join("\n")
+      let stripped = strippedString.split("\n");
+      if (stripped.length == 1) {
+        return strippedString;
+      }
+      else {
+        let pre = " ".repeat(numToAdd);
+        return stripped.map(s => pre + s).join("\n")
+      }
     }
   }
+  else return undefined
 }
 
 export function stripProgram(p: string): string {
