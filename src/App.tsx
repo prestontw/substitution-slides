@@ -143,15 +143,14 @@ class App extends React.Component<Props, State> {
     let end = { line: start.line + hArr.length - 1, ch: this.highlightCharEnd(hArr, start.ch) }
     return { from: start, to: end };
   }
-  highlightPositions(reference: IInstance | undefined, replacement: string | undefined): Selection | undefined {
-
-    let preString = this.getPre(reference, this.getSelection(reference));
-    if (preString == undefined) return undefined;
+  highlightPositions(program: ComponentProgram | undefined): Selection | undefined {
+    if (program == undefined) return undefined;
+    let preString = program.pre;
     let preLines = preString.split("\n");
     let preStub = this.prefixStub(preLines)!; // can do this since preString is not undefined
 
     let positions = this.highlightStartAndEnd({ lines: preLines, stub: preStub },
-      Util.reindentProgram(preStub, replacement));
+      program.result);
     return positions;
   }
 
@@ -180,9 +179,9 @@ class App extends React.Component<Props, State> {
     let setReplacement = (value: string) => { this.setState({ ...this.state, replacement: value }) };
     let code = this.state.replacement != undefined ? this.state.replacement : "edit here";
     // really, should do highlight positions after getting new program...
-    let positions = this.highlightPositions(this.state.reference, this.state.replacement);
-    let previewCode = this.programToString(this.getNewProgram(this.state.reference,
-      this.state.replacement));
+    let newProgram = this.getNewProgram(this.state.reference, this.state.replacement);
+    let positions = this.highlightPositions(newProgram);
+    let previewCode = this.programToString(newProgram);
 
     return (
       <div className="App">
