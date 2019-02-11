@@ -16,5 +16,8 @@ it('has sensible trace steps', () => {
 })
 
 // shape for resulting program should be reference, highlight (as positions), value, and component program it produces
+it('produces well indented programs', () => {
+
+})
 
 // shape for resulting highlight should be reference, highlight (as positions), value, and next highlight
