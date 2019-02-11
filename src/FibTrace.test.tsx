@@ -42,69 +42,82 @@ it('produces FibTrace programs', () => {
     {
       selection: { from: { line: 6, ch: 4 }, to: { line: 6, ch: 4 + 7 } },
       replace: "4"
-    },/*
-    {
-      selection: { from: { line: 0, ch: 0 }, to: { line: 0, ch: 0 } },
-      replace: trace[0].result
     },
     {
-      selection: { from: { line: 0, ch: 0 }, to: { line: 0, ch: 0 } },
-      replace: trace[0].result
+      selection: { from: { line: 6, ch: 12 }, to: { line: 6, ch: 12 + 7 } },
+      replace: "3"
     },
     {
-      selection: { from: { line: 0, ch: 0 }, to: { line: 0, ch: 0 } },
-      replace: trace[0].result
+      selection: { from: { line: 6, ch: 0 }, to: { line: 6, ch: 5 } },
+      replace: `(if 4 < 2 then
+    1
+  else
+    fib (4 - 1) + fib (4 - 2))`
     },
     {
-      selection: { from: { line: 0, ch: 0 }, to: { line: 0, ch: 0 } },
-      replace: trace[0].result
+      selection: { from: { line: 6, ch: 4 }, to: { line: 6, ch: 9 } },
+      replace: "false"
     },
     {
-      selection: { from: { line: 0, ch: 0 }, to: { line: 0, ch: 0 } },
-      replace: trace[0].result
+      selection: { from: { line: 6, ch: 1 }, to: { line: 9, ch: 27 } },
+      replace: `fib (4 - 1) + fib (4 - 2)`
     },
     {
-      selection: { from: { line: 0, ch: 0 }, to: { line: 0, ch: 0 } },
-      replace: trace[0].result
+      selection: { from: { line: 6, ch: 5 }, to: { line: 6, ch: 12 } },
+      replace: "3"
     },
     {
-      selection: { from: { line: 0, ch: 0 }, to: { line: 0, ch: 0 } },
-      replace: trace[0].result
+      selection: { from: { line: 6, ch: 13 }, to: { line: 6, ch: 20 } },
+      replace: "2"
     },
     {
-      selection: { from: { line: 0, ch: 0 }, to: { line: 0, ch: 0 } },
-      replace: trace[0].result
+      selection: { from: { line: 6, ch: 1 }, to: { line: 6, ch: 6 } },
+      replace: `(if 3 < 2 then
+    1
+  else
+    fib (3 - 1) + fib (3 - 2))`
     },
     {
-      selection: { from: { line: 0, ch: 0 }, to: { line: 0, ch: 0 } },
-      replace: trace[0].result
+      selection: { from: { line: 6, ch: 5 }, to: { line: 6, ch: 10 } },
+      replace: "false"
     },
     {
-      selection: { from: { line: 0, ch: 0 }, to: { line: 0, ch: 0 } },
-      replace: trace[0].result
+      selection: { from: { line: 6, ch: 2 }, to: { line: 9, ch: 27 } },
+      replace: `fib (3 - 1) + fib (3 - 2)`
     },
     {
-      selection: { from: { line: 0, ch: 0 }, to: { line: 0, ch: 0 } },
-      replace: trace[0].result
+      selection: { from: { line: 6, ch: 6 }, to: { line: 6, ch: 13 } },
+      replace: "2"
     },
     {
-      selection: { from: { line: 0, ch: 0 }, to: { line: 0, ch: 0 } },
-      replace: trace[0].result
+      selection: { from: { line: 6, ch: 14 }, to: { line: 6, ch: 21 } },
+      replace: "1"
     },
     {
-      selection: { from: { line: 0, ch: 0 }, to: { line: 0, ch: 0 } },
-      replace: trace[0].result
+      selection: { from: { line: 6, ch: 2 }, to: { line: 6, ch: 7 } },
+      replace: `(if 2 < 2 then
+    1
+  else
+    fib (2 - 1) + fib (2 - 2))`
     },
     {
-      selection: { from: { line: 0, ch: 0 }, to: { line: 0, ch: 0 } },
-      replace: trace[0].result
+      selection: { from: { line: 6, ch: 6 }, to: { line: 6, ch: 11 } },
+      replace: "false"
     },
     {
-      selection: { from: { line: 0, ch: 0 }, to: { line: 0, ch: 0 } },
-      replace: trace[0].result
-    },*/
+      selection: { from: { line: 6, ch: 3 }, to: { line: 9, ch: 27 } },
+      replace: trace[18].result
+    },
+    {
+      selection: { from: { line: 6, ch: 7 }, to: { line: 6, ch: 14 } },
+      replace: "1"
+    },
+    {
+      selection: { from: { line: 6, ch: 15 }, to: { line: 6, ch: 22 } },
+      replace: "0"
+    },
   ];
-  // expect(replacements.length).toBe(trace.length);
+  expect(replacements.length).toBe(trace.length);
   for (let i = 0; i < replacements.length; i++) {
     let current = replacements[i];
     let reference = trace[i];
