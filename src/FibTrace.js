@@ -1,4 +1,4 @@
-[{pre: ``,
+export let trace = [{pre: ``,
 highlight: ``,
 post: ``,
 result: `let rec fib n =
@@ -17,6 +17,7 @@ fib 5`,},
 `,
 highlight: `fib 5`,
 post: ``,
+// this is entered as if,    1,  else,    fib
 result: `if 5 < 2 then
   1
 else
@@ -243,4 +244,6 @@ result: `1`,},
 (((fib 1 + fib `,
 highlight: `(2 - 2)`,
 post: `) + fib 1) + fib 2) + fib 3`,
-result: `0`,}]
+result: `0`,}];
+
+export default trace;
