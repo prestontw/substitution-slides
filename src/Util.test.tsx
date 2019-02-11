@@ -91,3 +91,11 @@ it("doesn't remove second line spacing in two line program", () => {
   receive_allowance {}, 0 + 1)`)).toEqual(`months_to_buy(receive_allowance {},
   receive_allowance {}, 0 + 1)`)
 })
+
+it('gets some correct ranges', () => {
+  expect(Util.getRange([''], {from: {line: 0, ch: 0}, to: {line: 0, ch: 0}})).toEqual("");
+
+  expect(Util.getRange(['let fib n =','  3'],
+  {from: {line: 0, ch: 0}, to: {line: 1, ch: 2}})).
+    toEqual("let fib n =\n  ")
+})

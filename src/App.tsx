@@ -48,19 +48,12 @@ class App extends React.Component<Props, State> {
       return undefined;
   }
   getNewProgram(reference?: IInstance, replace?: string): ComponentProgram | undefined {
-    let selection = this.getSelection(reference);
-    if (selection != undefined && replace != undefined) {
-      let pre = reference!.getRange({ line: 0, ch: 0 }, selection.from);
+    if (reference != undefined && replace != undefined) {
 
-      let highlight = reference!.getRange(selection.from, selection.to);
-
-      let result = replace;
-
-      let indentedResult = Util.reindentProgram(Util.getLastLine(pre), result);
-
-      let post = reference!.getRange(selection.to, this.endOfDocument(reference!));
-
-      return { pre, highlight, result: indentedResult!, post };
+      let code = reference.getValue();
+      let selection = this.getSelection(reference)!; // since only undefined if referencce undefined
+      console.log(selection);
+      return Util.getNewProgram(code, selection, replace);
     }
     else {
       return undefined;
