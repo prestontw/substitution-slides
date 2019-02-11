@@ -60,11 +60,9 @@ class App extends React.Component<Props, State> {
     }
   }
 
-  replaceText() {
+  replaceText(newProgram: ComponentProgram | undefined) {
     // get selection from reference, get pre and post,
     // add new thing to steps,
-    let newProgram = this.getNewProgram(this.state.reference!, this.state.replacement!)
-    console.log(newProgram);
     if (newProgram != undefined) {
       this.setState({
         ...this.state,
@@ -161,7 +159,7 @@ class App extends React.Component<Props, State> {
         <header className="App-header">
           <button className="remove" onClick={() => { this.removeLastStep() }}>Remove last</button>
           <button className="preview" onClick={() => { this.previewReplace() }}>Toggle preview</button>
-          <button className="replace" onClick={() => this.replaceText()}>Replace text</button>
+          <button className="replace" onClick={() => this.replaceText(newProgram)}>Replace text</button>
           <button className="export" onClick={() => { this.exportTrace(this.state.steps) }}>Export trace</button>
         </header>
         <div className="App-body">
@@ -170,7 +168,7 @@ class App extends React.Component<Props, State> {
             code={code}
             onMount={setReplacementEditor}
             onBeforeChange={setReplacement}
-            run={_cm => this.replaceText()} />
+            run={_cm => this.replaceText(newProgram)} />
           {(this.state.showPreview) ?
             <div><p>Preview!</p>
               <Preview
