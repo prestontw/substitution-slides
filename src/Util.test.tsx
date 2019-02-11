@@ -35,11 +35,12 @@ else
   fact(n - 1)`)
 })
 
-it('strips two line program', () => {
+// unfortunate, but not a lot I can do without indentation info
+it('keeps same indentation for two line program', () => {
   expect(Util.stripProgram(`months_to_buy_xbox(receive_allowance { amount = 119; allowance = 23 },
     receive_allowance { amount = 86; allowance = 14 }, 0 + 1)`)).toEqual(
     `months_to_buy_xbox(receive_allowance { amount = 119; allowance = 23 },
-  receive_allowance { amount = 86; allowance = 14 }, 0 + 1)`
+    receive_allowance { amount = 86; allowance = 14 }, 0 + 1)`
     )
 })
 

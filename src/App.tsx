@@ -114,21 +114,11 @@ class App extends React.Component<Props, State> {
       // don't remove anything from empty array
     }
   }
-  getLast<A>(arr: A[]): A | undefined {
-    let len = arr.length;
-    if (len > 0) {
-      return arr[len - 1];
-    }
-    else {
-      return undefined;
-    }
-  }
-
   highlightCharStart(prefix: string | undefined): number {
     return (prefix != undefined) ? prefix.length : 0;
   }
   highlightCharEnd(highlightedLines: string[], prefixLength: number): number {
-    let hlast = this.getLast(highlightedLines);
+    let hlast = Util.getLast(highlightedLines);
     return ((highlightedLines.length == 1) ? prefixLength : 0) + (hlast != undefined ? hlast.length : 0);
   }
   highlightStartAndEnd(prefix: { lines: string[], stub: string } | undefined, highlight: string | undefined): Selection | undefined {
@@ -147,21 +137,11 @@ class App extends React.Component<Props, State> {
     if (program == undefined) return undefined;
     let preString = program.pre;
     let preLines = preString.split("\n");
-    let preStub = this.prefixStub(preLines)!; // can do this since preString is not undefined
+    let preStub = Util.getLast(preLines)!; // can do this since preString is not undefined
 
     let positions = this.highlightStartAndEnd({ lines: preLines, stub: preStub },
       program.result);
     return positions;
-  }
-
-  prefixStub(prefixLines: string[] | undefined): string | undefined {
-    if (prefixLines == undefined) {
-      return undefined;
-    }
-    else {
-      let pLast = this.getLast(prefixLines);
-      return pLast;
-    }
   }
 
   exportTrace(t: ComponentProgram[]) {

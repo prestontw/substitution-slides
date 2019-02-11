@@ -13,7 +13,7 @@ export function formatString(s: string): string {
 
 export function getLastLine(s: string): string {
   let list = s.split("\n");
-  return list[list.length - 1];
+  return getLast(list)!;
 }
 
 export function reindentProgram(prefix: string, program: string | undefined): string | undefined {
@@ -80,4 +80,14 @@ function removePrefixes(ss: string[], prefix: string): string[] {
 }
 function removePrefix(s: string, prefix: RegExp): string {
   return s.replace(prefix, '');
+}
+
+export function getLast<A>(arr: A[]): A | undefined {
+  let len = arr.length;
+  if (len > 0) {
+    return arr[len - 1];
+  }
+  else {
+    return undefined;
+  }
 }
