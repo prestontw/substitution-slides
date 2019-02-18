@@ -15,7 +15,7 @@ interface Props {
 // setOption extraKeys
 class CodePreview extends React.Component<Props> {
 
-  markText(editor: IInstance, positions?: Selection) {
+  markText(editor: IInstance, positions: Selection | undefined) {
     if (positions != undefined) {
       editor.markText(positions.from, positions.to, { className: "highlighted" })
     }

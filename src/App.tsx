@@ -47,7 +47,7 @@ class App extends React.Component<Props, State> {
     else
       return undefined;
   }
-  getNewProgram(reference?: IInstance, replace?: string): ComponentProgram | undefined {
+  getNewProgram(reference: IInstance | undefined, replace: string | undefined): ComponentProgram | undefined {
     if (reference != undefined && replace != undefined) {
 
       let code = reference.getValue();
@@ -73,7 +73,7 @@ class App extends React.Component<Props, State> {
     }
   }
 
-  getSelection(editor?: IInstance): Selection | undefined {
+  getSelection(editor: IInstance | undefined): Selection | undefined {
     if (editor != undefined) {
       return { from: editor.getCursor("start"), to: editor.getCursor("end") };
     }
@@ -82,7 +82,7 @@ class App extends React.Component<Props, State> {
     }
   }
 
-  programToString(p?: ComponentProgram): string | undefined {
+  programToString(p: ComponentProgram | undefined): string | undefined {
     if (p != undefined)
       return p.pre + p.result + p.post;
     else
